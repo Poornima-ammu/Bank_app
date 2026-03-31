@@ -1,56 +1,70 @@
-# Bank_app
+# Bank App
+
+A console-based banking application built with **Java** and **SQL**.
+
+## Features
+
+- **Register** - Create a new bank account
+- **Login** - Authenticate with email and password
+- **Deposit** - Add money to your account
+- **Withdraw** - Withdraw money from your account (with balance check)
+- **Transfer** - Send money between accounts (with transaction rollback support)
+- **Transaction History** - View all your transactions with timestamp
+- **Check Balance** - View your current account balance
+- **Exit** - Logout from the application
 
 ## Project Structure
 
-```
-Bank_app/
-├── src/                   # Source code directory
-│   ├── components/       # Reusable components
-│   ├── pages/            # Application pages
-│   ├── services/         # API services
-│   └── utils/            # Utility functions
-├── tests/                # Test cases
-│   └── unit/             # Unit tests
-├── public/               # Public assets
-│   └── index.html        # Entry point
-├── README.md             # Project documentation
-└── package.json          # Project metadata
-```
+### Core Classes
 
-## Features
-- User authentication
-- Account management
-- Transaction history
-- Fund transfers
-- Responsive UI design
+- **BankApp.java** - Main class with console menu interface
+- **Account.java** - Model class representing a bank account with properties:
+  - Account Number
+  - Name
+  - Email
+  - Password (hashed)
+  - Balance
 
-## Setup Instructions
-1. **Clone the repository:**  
-   ```bash
-   git clone https://github.com/Poornima-ammu/Bank_app.git
-   cd Bank_app
-   ```  
-2. **Install dependencies:**  
-   ```bash
-   npm install
-   ```  
-3. **Start the application:**  
-   ```bash
-   npm start
-   ```  
-   The application will be running on `http://localhost:3000`
+### Service & DAO Layer
 
-## Usage Guide
-- **Login/Register:** Use the application to create a new account or login.
-- **Manage Accounts:** Users can view and manage their bank accounts.
-- **Perform Transactions:** Users can initiate fund transfers and view transaction histories.
+- **BankService.java** - Service layer handling business logic
+- **AccountDao.java** - Data Access Object for database operations:
+  - Create accounts
+  - User login with password verification
+  - Deposit/Withdraw operations
+  - Money transfer between accounts
+  - Transaction history retrieval
+  - Balance checking
 
-## Contribution
-To contribute to this project, please follow these steps:
-- Fork the repository.
-- Create a new branch.
-- Make your changes.
-- Submit a pull request with a clear description of your changes.
+### Utilities
 
-## License
-This project is licensed under the MIT License.
+- **DBConnection.java** - Manages database connections
+- **PasswordUtil.java** - Password hashing utility for secure password storage
+
+## Prerequisites
+
+- Java JDK 8 or higher
+- SQL Database (MySQL/Oracle/PostgreSQL)
+- JDBC Driver for your database
+
+## Database Setup
+
+Create the following tables:
+
+```sql
+CREATE TABLE ACCOUNTS (
+    ACC_NO INT PRIMARY KEY AUTO_INCREMENT,
+    NAME VARCHAR(100),
+    EMAIL VARCHAR(100) UNIQUE,
+    PASSWORD VARCHAR(255),
+    BALANCE DOUBLE DEFAULT 0
+);
+
+CREATE TABLE TRANSACTIONS (
+    TRANS_ID INT PRIMARY KEY AUTO_INCREMENT,
+    ACC_NO INT,
+    TYPE VARCHAR(50),
+    AMOUNT DOUBLE,
+    DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ACC_NO) REFERENCES ACCOUNTS(ACC_NO)
+);
